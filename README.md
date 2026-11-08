@@ -7,6 +7,7 @@
 - 어지럼 정도(0–10), 메모, 날짜별 운동 완료 기록
 - JSON 기록 내보내기 및 전체 삭제
 - 모바일 대응 화면과 의료 참고 자료
+- 고정 표적, 공 따라보기, 방향키·터치로 조작하는 바운스볼 게임 공간
 
 ## 실행
 
@@ -23,7 +24,7 @@ python3 -m http.server 8080
 Node.js 20 이상에서:
 
 ```sh
-node --test tests/core.test.mjs
+node --test tests/*.test.mjs
 node --check app.mjs
 ```
 
@@ -39,3 +40,11 @@ node --check app.mjs
 - [ANPT/APTA 전정재활 임상진료지침](https://pmc.ncbi.nlm.nih.gov/articles/PMC8920012/)
 - [NHS 전정신경염](https://www.nhs.uk/conditions/labyrinthitis/)
 - [NHS 어지럼과 진료 안내](https://www.nhs.uk/conditions/vertigo/)
+
+## 게임 공간
+
+`games.html`에서 세 가지 모드를 사용할 수 있습니다. 자동 시작하지 않으며, 화면을 떠나면 일시정지됩니다. 방향키 또는 A·D 키, 터치 버튼으로 바운스볼을 조작합니다.
+
+고정 표적 모드는 전문가에게 배운 운동을 돕는 도구이며 움직임을 측정하지 않습니다. 공 따라보기와 바운스볼은 보조 활동·일반 게임으로서 시선 안정화 재활을 대체하지 않습니다.
+
+완료한 세션만 별도 localStorage에 최대 200개 저장합니다. 기존 재활 운동 횟수와 합산하지 않습니다. 게임 페이지의 기록 내보내기로 JSON을 저장할 수 있습니다.

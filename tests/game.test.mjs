@@ -1,0 +1,8 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {Session,World,trackingPoint,cleanGameRecords} from '../game-core.mjs';
+test('session counts only running time, finishes once, stop is not completion',()=>{const s=new Session(15);assert.equal(s.advance(5),false);s.start();s.advance(4);s.pause();s.advance(30);assert.equal(s.elapsed,4);s.start();assert.equal(s.advance(11),true);assert.equal(s.advance(1),false);assert.equal(s.state,'done');const b=new Session(15);b.start();b.stop();assert.equal(b.advance(30),false);assert.equal(b.state,'stopped')});
+test('tracking stays bounded and slower speed travels less',()=>{for(let t=0;t<100;t++){const p=trackingPoint(t,1,'horizontal');assert.ok(p.x>=180&&p.x<=720);assert.equal(p.y,220)}assert.ok(trackingPoint(1,.5,'horizontal').x<trackingPoint(1,1,'horizontal').x)});
+test('ball lands on platform and bounces without leaving horizontal scene',()=>{const w=new World();w.ball={x:100,y:340,vy:150};w.step(.05,0);assert.ok(w.ball.vy<0);for(let i=0;i<100;i++)w.step(.05,-1);assert.ok(w.ball.x>=16)});
+test('fall resets safely and each star scores only once',()=>{const w=new World();w.ball={x:450,y:600,vy:10};w.step(.01,0);assert.equal(w.ball.x,100);assert.equal(w.falls,1);const star=w.stars[0];w.ball={x:star.x,y:star.y,vy:0};w.step(.001,0);assert.equal(w.score,1);w.ball={x:star.x,y:star.y,vy:0};w.step(.001,0);assert.equal(w.score,1)});
+test('stored games reject corrupt entries and never mix with rehabilitation counts',()=>{assert.deepEqual(cleanGameRecords(null),[]);const r={date:'2026-11-08',mode:'bounce',seconds:30,score:2};assert.deepEqual(cleanGameRecords([r,{...r,mode:'fake'},{...r,seconds:-1}]),[r])});
